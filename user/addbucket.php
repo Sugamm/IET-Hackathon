@@ -1,11 +1,14 @@
 <?php 
 
+include 'dbconfig.php';
+
+
 if (isset($_POST['submitBucket']) == true) {
 	$bucketname = trim(strtoupper($_POST['addbucket']));
 	$userId = $row['userID'];
 	$email = $row['userEmail'];
 	$uname = $row['userName'];
-	$conn = mysqli_connect('localhost','root','password','hostellife') or die("ERR_NETWORK");
+
 	
 	$checkDuplicate = "SELECT bucket_name FROM bucketList WHERE bucket_name='".$bucketname."'";
 	$checkDuplicateBucket = mysqli_query($conn,$checkDuplicate) or die("SELECT_ERR");
@@ -51,6 +54,6 @@ if (isset($_POST['submitBucket']) == true) {
 	}
 }
 
-mysqli_close($conn);
+
 
 ?>

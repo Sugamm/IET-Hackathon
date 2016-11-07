@@ -1,4 +1,7 @@
 <?php
+
+include 'dbconfig.php';
+
 session_start();
 require_once '../script/class.user.php';
 $user_home = new USER();
@@ -86,16 +89,14 @@ include 'addPost.php';
 						<li><a href="index.php" class="active">MY FEED</a></li>
 						<?php 
 						$showBucketQuery = "SELECT * FROM bucketList WHERE userID='".trim($row['userID'])."'";
-						$connn = mysqli_connect('localhost','root','password','hostellife') or die("ERR_NETWORK");
-	
+						
 
-						$showBucketResult = mysqli_query($connn,$showBucketQuery);
+						$showBucketResult = mysqli_query($conn,$showBucketQuery);
 
 						
 						while ($BucketName = mysqli_fetch_array($showBucketResult)) {
 							echo '<li><a href="bucket.php?bn='.$BucketName["bucket_name"].'">'.$BucketName["bucket_name"].'</a></li>';
 						}
-						mysqli_close($connn);
 						?>
 					</ul>
 				</nav>
@@ -215,16 +216,15 @@ $rowUser = mysqli_fetch_array($resultUser);
 				    
 				    <?php 
 						$showBucketQuery = "SELECT * FROM bucketList WHERE userID='".trim($row['userID'])."'";
-						$connn = mysqli_connect('localhost','root','password','hostellife') or die("ERR_NETWORK");
+						
 	
 
-						$showBucketResult = mysqli_query($connn,$showBucketQuery);
+						$showBucketResult = mysqli_query($conn,$showBucketQuery);
 
 						
 						while ($BucketName = mysqli_fetch_array($showBucketResult)) {
 							echo '<option value="'.$BucketName["bucket_name"].'">'.$BucketName["bucket_name"].'</option>';
 						}
-						mysqli_close($connn);
 						?>
 				  </select>
 				 </div>

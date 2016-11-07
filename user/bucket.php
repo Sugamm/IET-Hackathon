@@ -1,4 +1,7 @@
 <?php
+
+include 'dbconfig.php';
+
 session_start();
 require_once '../script/class.user.php';
 $user_home = new USER();
@@ -13,7 +16,7 @@ $stmt->execute(array(":uid"=>$_SESSION['userSession']));
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
 include 'addbucket.php';
-include 'addPost.php';
+include 'addPost.php';	
 ?>
 
 <!DOCTYPE HTML>
@@ -83,19 +86,15 @@ include 'addPost.php';
 				</header>
 				<nav id="nav" style="overflow: auto;">
 					<ul>
-						<li><a href="#">MY FEED</a></li>
+						<li><a href="index.php">MY FEED</a></li>
 						<?php 
 						$showBucketQuery = "SELECT * FROM bucketList WHERE userID='".trim($row['userID'])."'";
-						$connn = mysqli_connect('localhost','root','password','hostellife') or die("ERR_NETWORK");
-	
-
-						$showBucketResult = mysqli_query($connn,$showBucketQuery);
+						$showBucketResult = mysqli_query($conn,$showBucketQuery);
 
 						
 						while ($BucketName = mysqli_fetch_array($showBucketResult)) {
 							echo '<li><a href="bucket.php?bn='.$BucketName["bucket_name"].'">'.$BucketName["bucket_name"].'</a></li>';
 						}
-						mysqli_close($connn);
 						?>
 					</ul>
 				</nav>
@@ -120,7 +119,15 @@ include 'addPost.php';
 		<section id="one">
 			<div class="container" style="padding: 0px;">
 				<div class="head-feed">
-					<h3 style="color: #fff;"><?php echo $_GET['bn'];?></h3>
+					<h3 style="color: #fff;"><?php
+					
+	
+					if (!empty($_GET['bn'])) {
+					 echo $_GET['bn'];
+
+					 }else{
+					 	header("Location:index.php");
+					 }?></h3>
 					<p>Make Your Life More Interseting.</p>
 				</div>
 				<?php echo $msg;?>
@@ -129,15 +136,16 @@ include 'addPost.php';
 						
 						
 <?php
-$selectQueryView="SELECT * FROM bucketPost WHERE userID='".$row['userID']."' AND bucket_name='".$_GET['bn']."'";
+$selectQueryView="SELECT * FROM bucketPost WHERE bucket_name='".$_GET['bn']."'";
 $resultView = mysqli_query($conn,$selectQueryView) or die("ERR_QUERY_BUG");
 
 while ($rowView = mysqli_fetch_array($resultView)) {
-$selectUser = "SELECT * FROM tbl_users where userID='".$rowView['userID']."'";
-$resultUser = mysqli_query($conn,$selectUser) or die("ERR_QUERY_BUG_USER");
-$rowUser = mysqli_fetch_array($resultUser);
+
+	$selectUser = "SELECT * FROM tbl_users where userID='".$rowView['userID']."'";
+	$resultUser = mysqli_query($conn,$selectUser) or die("ERR_QUERY_BUG_USER");
+	$rowUser = mysqli_fetch_array($resultUser);
   echo '
-  <!-- Start Card -->
+    <!-- Start Card -->
  		<div class="col s12 m4" >
           <div class="card">
           <a href="view.php?pi='.$rowView['post_id'].'">
@@ -196,16 +204,15 @@ $rowUser = mysqli_fetch_array($resultUser);
 				    
 				    <?php 
 						$showBucketQuery = "SELECT * FROM bucketList WHERE userID='".trim($row['userID'])."'";
-						$connn = mysqli_connect('localhost','root','password','hostellife') or die("ERR_NETWORK");
+						
 	
 
-						$showBucketResult = mysqli_query($connn,$showBucketQuery);
+						$showBucketResult = mysqli_query($conn,$showBucketQuery);
 
 						
 						while ($BucketName = mysqli_fetch_array($showBucketResult)) {
 							echo '<option value="'.$BucketName["bucket_name"].'">'.$BucketName["bucket_name"].'</option>';
 						}
-						mysqli_close($connn);
 						?>
 				  </select>
 				 </div>

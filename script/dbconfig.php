@@ -5,7 +5,7 @@ class Database
     private $host = "localhost";
     private $db_name = "hostellife";
     private $username = "root";
-    private $password = "password";
+    private $password = "";
     public $conn;
      
     public function dbConnection()

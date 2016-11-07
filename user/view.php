@@ -73,10 +73,10 @@ include 'addPost.php';
 				</header>
 				<nav id="nav" style="overflow: auto;">
 					<ul>
-						<li><a href="#" class="active">MY FEED</a></li>
+						<li><a href="index.php" class="active">MY FEED</a></li>
 						<?php 
 						$showBucketQuery = "SELECT * FROM bucketList WHERE userID='".trim($row['userID'])."'";
-						$connn = mysqli_connect('localhost','root','Sugam0030','hostellife') or die("ERR_NETWORK");
+						$connn = mysqli_connect('localhost','root','','hostellife') or die("ERR_NETWORK");
 	
 
 						$showBucketResult = mysqli_query($connn,$showBucketQuery);
@@ -112,6 +112,7 @@ include 'addPost.php';
 				<div class="features">
 					<div class="col s12 m12">
 <?php
+
 $selectQueryView="SELECT * FROM bucketPost WHERE post_id='".$_GET['pi']."'";
 $resultView = mysqli_query($conn,$selectQueryView) or die("ERR_QUERY_BUG");
 $rowView = mysqli_fetch_array($resultView);
@@ -126,7 +127,8 @@ $rowUser = mysqli_fetch_array($resultUser);
               <img src="uploads/'.$rowView['post_image'].'" style="height: 600px;">
               <span class="card-title" style="margin: 0 100px;background: rgba(16, 16, 16, 0.75);">'.$rowView['post_title'].'
 
-              <i class="material-icons tooltipped" id="intrested" data-position="top" data-delay="50" data-tooltip="Already mission accomplished!" style="position: absolute;top:1px; left: 745px;background: rgba(16, 16, 16, 0.75);border-radius:50%;padding:20px;">attach_file</i>
+              <a href="view.php?pi='.$rowView['post_id'].'&addInterest=true"><i class="material-icons tooltipped" id="intrested" data-position="top" data-delay="50" data-tooltip="Already mission accomplished!" style="position: absolute;top:1px; left: 745px;background: rgba(16, 16, 16, 0.75);border-radius:50%;padding:20px;">attach_file</i>
+              </a>
               </span>
 
             </div>
@@ -157,24 +159,57 @@ $rowUser = mysqli_fetch_array($resultUser);
 	</div>
 	<!-- End Card -->
 	';
+ function runMyFunction($conn,$post_id,$user_id) {
+
+ 	$selectAcc = "SELECT user_id FROM accomplished where post_id='".$post_id."'";
+	$resultAcc = mysqli_query($conn,$selectAcc) or die("ERR_SELECT");
+	while ($rowAcc = mysqli_fetch_array($resultAcc)) {
+		if ($rowAcc['post_id'] != $post_id || $rowAcc['user_id'] != $user_id) {
+			$queryAccomplished = "INSERT INTO accomplished(post_id,user_id) VALUES ('".$post_id."','".$user_id."')";
+
+    		$resultAccomplished = mysqli_query($conn,$queryAccomplished) or die("ERR");
+		}else{
+			$msg = '<div class="chip" style="position:absolute; right:0;top:20px;">
+					Already you accomplished it before. :)
+					<i class="close material-icons">close</i>
+				</div>';
+		}
+   
+	}
+  }
+
+  if (isset($_GET['addInterest']) && isset($_GET['pi'])) {
+    runMyFunction($conn, $_GET['pi'], $row['userID']);
+  }
+
 
 ?>
 						
+					
 						<div class="container">
 					    <h5 class="header" style="padding: 10px 0;">Now Look who visited already.</h5>
-					    <div class="card horizontal">
+					    <?php 
+$selectAcc = "SELECT user_id FROM accomplished where post_id='".$_GET['pi']."'";
+$resultAcc = mysqli_query($conn,$selectAcc) or die("ERR_SELECT");
+
+while ($rowAcc = mysqli_fetch_array($resultAcc)) {
+	$selectAccUser = "SELECT * FROM tbl_users where userID='".$rowAcc['user_id']."'";
+	$resultAccUser = mysqli_query($conn,$selectAccUser) or die("ERR_SELECT_USER");
+	$rowAccUser = mysqli_fetch_array($resultAccUser);
+	echo '				<div class="card horizontal">
 					      <div class="card-image">
-					        <img src="images/female.png" style="width: 200px; border-right: 1px solid #ccc;">
+					        <img src="images/'.$rowAccUser['profilePic'].'" style="width: 200px; border-right: 1px solid #ccc;">
 					      </div>
 					      <div class="card-stacked">
 					        <div class="card-content">
-					          <p>Hiti Jaiswal</p>
-					        </div>
-					        <div class="card-action">
-					          <a href="#">View Profile</a>
+					          <p>'.$rowAccUser['userName'].'</p>
+					          <p>'.$rowAccUser['userEmail'].'</p>
 					        </div>
 					      </div>
-					    </div>
+					    </div>';
+}
+					    ?>
+					    
 					  </div>
 					</div>
 				</div>
@@ -211,7 +246,7 @@ $rowUser = mysqli_fetch_array($resultUser);
 				    
 				    <?php 
 						$showBucketQuery = "SELECT * FROM bucketList WHERE userID='".trim($row['userID'])."'";
-						$connn = mysqli_connect('localhost','root','Sugam0030','hostellife') or die("ERR_NETWORK");
+						$connn = mysqli_connect('localhost','root','','hostellife') or die("ERR_NETWORK");
 	
 
 						$showBucketResult = mysqli_query($connn,$showBucketQuery);

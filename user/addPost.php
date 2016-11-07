@@ -1,6 +1,6 @@
 <?php
 
-$conn = mysqli_connect('localhost','root','Sugam0030','hostellife') or die("ERR_NETWORK");
+include 'dbconfig.php';
 	
 
 $target_dir = "uploads/";
