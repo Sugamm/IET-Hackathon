@@ -121,7 +121,7 @@ class USER
 		$mail->Port       = 465;             
 		$mail->AddAddress($email);
 		$mail->Username="myselfsugam@gmail.com";  
-		$mail->Password="HitiLovesmeornot";            
+		$mail->Password="";            
 		$mail->SetFrom('myselfsugam@gmail.com','Hostel Life');
 		$mail->AddReplyTo("myselfsugam@gmail.com","Hostel Life");
 		$mail->Subject    = $subject;
